@@ -12,6 +12,23 @@ let schema = Yup.object().shape({
   name: Yup.string()
     .required("Name is required")
     .matches(/^[A-Z][a-z]+ [A-z][a-z]+$/, "Enter Full Name"),
+  email: Yup.string()
+    .email()
+    .required("Email is required")
+    .matches(
+      /^[a-zA-Z0-9_%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "Enter valid email address"
+    ),
+  age: Yup.number()
+    .required("Age is required")
+    .positive("Age must be positive")
+    .integer("Age must be an integer"),
+  password: Yup.string()
+    .required("Password is required")
+    .matches(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, "Password is weak"),
+  cPassword: Yup.string()
+    .required("Confirm Password is required")
+    .oneOf([Yup.ref("password"), null], "Passwords must match"),
 });
 
 function App() {
@@ -53,10 +70,30 @@ function App() {
         error={!!errors.name}
         helperText={errors.name?.message}
       />
-      <TextField label="Email" {...register("email")} />
-      <TextField label="Age" {...register("age")} />
-      <TextField label="Password" {...register("password")} />
-      <TextField label="Confirm Password" {...register("cPassword")} />
+      <TextField
+        label="Email"
+        {...register("email")}
+        error={!!errors.email}
+        helperText={errors.email?.message}
+      />
+      <TextField
+        label="Age"
+        {...register("age")}
+        error={!!errors.age}
+        helperText={errors.age?.message}
+      />
+      <TextField
+        label="Password"
+        {...register("password")}
+        error={!!errors.password}
+        helperText={errors.password?.message}
+      />
+      <TextField
+        label="Confirm Password"
+        {...register("cPassword")}
+        error={!!errors.cPassword}
+        helperText={errors.cPassword?.message}
+      />
 
       <Button variant="contained" type="submit">
         Sign UP
