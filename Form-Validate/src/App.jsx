@@ -3,6 +3,16 @@ import React from "react";
 import { Button, Paper, TextField, Typography } from "@mui/material";
 
 import { useForm } from "react-hook-form";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+// Create schema using Yup
+// Yup is a JavaScript schema builder for value parsing and validation
+let schema = Yup.object().shape({
+  name: Yup.string()
+    .required("Name is required")
+    .matches(/^[A-Z][a-z]+ [A-z][a-z]+$/, "Enter Full Name"),
+});
 
 function App() {
   let paperStyle = {
@@ -18,7 +28,9 @@ function App() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   let handleData = (data) => {
     console.log(data); // Call API
@@ -37,7 +49,7 @@ function App() {
 
       <TextField
         label="Name"
-        {...register("name", { required: "Name is required" })}
+        {...register("name")}
         error={!!errors.name}
         helperText={errors.name?.message}
       />
